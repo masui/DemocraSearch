@@ -3,3 +3,4 @@
 *.dvi
 *.log
 *.aux
+*_browserify.js
