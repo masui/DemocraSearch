@@ -1,0 +1,42 @@
+{
+    "name": "DemocraSearch",
+    "description" : "'/ ' をomniboxに入力してHelpfeel検索する",
+    "version": "1.1",
+    "manifest_version": 3,
+    "permissions": [
+	"storage",
+	"downloads"
+    ],
+    "content_scripts": [
+	{
+	    "matches": ["<all_urls>"],
+	    "js": [
+		"jquery-2.1.4.min.js",
+		"content_script_browserify.js"
+	    ],
+	    "run_at": "document_idle"
+	}
+    ],
+    "background.service_worker": {
+	"scripts": [
+	    "background_browserify.js"
+	],
+	"persistent": false
+    },
+    "omnibox": { "keyword" : "/" },
+    "action": {
+	"default_icon": {
+	    "16": "ds-16.png"
+	},
+	"default_title": "DemocraSearch登録"
+    },
+    "icons": {
+	"16": "ds-16.png",
+	"32": "ds-32.png",
+	"48": "ds-48.png",
+	"96": "ds-96.png",
+	"128": "ds-128.png",
+	"192": "ds-192.png"
+    },
+    "options_page": "setting.html"
+}
