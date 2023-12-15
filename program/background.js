@@ -55,8 +55,6 @@ chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
 // ユーザがメニューを選択したとき呼ばれるもの
 //
 chrome.omnibox.onInputEntered.addListener(function(text) {
-    console.log(text)
-    console.log('aaaaaa')
     if(text.match(/^http/)){
 	//openWindow(text) // location.href = は動かない
 	//location.href = text;
