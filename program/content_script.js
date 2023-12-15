@@ -131,6 +131,14 @@ function process(lines,project,ask){
 // コールバックでbackground.jsからの値を受け取る
 //
 chrome.runtime.onMessage.addListener(message => {
+    alert('getmessage')
+    /*
+    if (message.type == 'open') {
+	window.open("http://pitecan.com")
+	return;
+    }
+    */
+    
     if (message.type !== 'CLICK_POPUP') {
 	return;
     }

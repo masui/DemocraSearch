@@ -55,18 +55,26 @@ chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
 // ユーザがメニューを選択したとき呼ばれるもの
 //
 chrome.omnibox.onInputEntered.addListener(function(text) {
+    console.log(text)
+    console.log('aaaaaa')
     if(text.match(/^http/)){
-	window.open(text) // location.href = は動かない
+	//openWindow(text) // location.href = は動かない
+	//location.href = text;
+	//chrome.tabs.sendMessage(0, { type: 'OPEN', message: "message" })
+	//clients.openWindow(text);
+	//chrome.runtime.sendMessage({ type: 'open' })
+	//postMessage(text);
+	chrome.windows.create({ "url": text })
     }
     else {
 	fetch('https://goquick.org') // GoQuick.orgユーザはGoQuick.orgを利用
 	    .then(response => response.text())
 	    .then(data => {
 		if(data.match("GoQuick Login")){
-		    window.open(`https://google.com/search?q=${text}`)
+		    chrome.windows.create({"url": `https://google.com/search?q=${text}`})
 		}
 		else {
-		    window.open('http://goquick.org/' + text)
+		    chrome.windows.create({"url": 'http://goquick.org/' + text})
 		}
 	    })
     }
