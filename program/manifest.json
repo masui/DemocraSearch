@@ -17,11 +17,8 @@
 	    "run_at": "document_idle"
 	}
     ],
-    "background.service_worker": {
-	"scripts": [
-	    "background_browserify.js"
-	],
-	"persistent": false
+    "background": {
+	"service_worker": "background_browserify.js"
     },
     "omnibox": { "keyword" : "/" },
     "action": {

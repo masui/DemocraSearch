@@ -1,18 +1,24 @@
+//
+// ユーザーが指定したページにアクセスした際に動作するスクリプト
+//
 require("re_expand") // browserifyで展開
 const crypto = require('crypto')
+
+// alert('content_script')
 
 var suggests = []
 for(var i=0;i<100;i++){
     suggests[i] = {}
 }
-var suggestnames = []
+var suggestnames = [] // localStorageからデータ取得するときの名前の列
 for(var i=0;i<100;i++){
     suggestnames[i] = `suggests${i}`
 }
 
 var descs = []
 
-var status = $('<div>')
+// 処理状況を表示するための細長ウィンドウ
+var statusWindow = $('<div>')
     .css('position','absolute')
     .css('width','100%')
     .css('height','18pt')
@@ -22,7 +28,7 @@ var status = $('<div>')
     .appendTo($('body'))
     .hide()
 
-function hash(str){ // 文字列を0〜255の値に
+function hash(str){ // 文字列を0〜100の値に
     const md5 = crypto.createHash('md5')
     return parseInt(md5.update(str).digest('hex').substring(0,4),16) % 100
 }
@@ -37,14 +43,15 @@ function terminate_def(cmd){
 		suggests[h][s] = cmd
 	    }
 	}
-	var setval = {}
-	setval[`suggests${h}`] = suggests[h]
-	chrome.storage.local.set(setval, function(){ });
+	var v = {}
+	v[`suggests${h}`] = suggests[h]
+	chrome.storage.local.set(v, function(){ });
     }
     descs = []
 }
 
-function register_page(){
+// 単独ページの登録: ダイアログを開いてHelpfeel記法をユーザに入力させる
+function registerOnePage(){
     var cmd = location.href
     var h = hash(cmd)
     
@@ -52,16 +59,16 @@ function register_page(){
     if(desc){
 	var expanded = desc.expand() // Helpfeel記法の正規表現を展開
 	for(var s of expanded){
-	    status.text(s)
+	    statusWindow.text(s)
 	    suggests[h][s] = cmd
 	}
-	var setval = {}
-	setval[`suggests${h}`] = suggests[h]
-	chrome.storage.local.set(setval, function(){ });
+	var v = {}
+	v[`suggests${h}`] = suggests[h]
+	chrome.storage.local.set(v, function(){ });
     }
     else if(desc == ''){ // 空文字列入力
 	alert(`ヘルプを消去します (${cmd})`)
-	status.hide()
+	statusWindow.hide()
 	// suggests[h][s] == cmd のものを削除
 	var name = `suggests${h}`
 	chrome.storage.local.get(name, function (value) {
@@ -71,12 +78,13 @@ function register_page(){
 		    delete suggests[x]
 		}
 	    }
-	    var setval = {}
-	    setval[name] = suggests
-	    chrome.storage.local.set(setval, function(){ });
+	    var v = {}
+	    v[name] = suggests
+	    chrome.storage.local.set(v, function(){ });
 	})
     }
     else { // desc == null (キャンセル)
+	// 何もしない
     }
 }
 
@@ -86,13 +94,13 @@ function process(lines,project,ask){
     // Scrapboxページの内容を1行ずつ調べてHelpfeel記法を処理する
     //
     descs = [] // Helpfeel記法
-    let title = lines[0].text
+    let title = lines[0].text // Scrapboxページのタイトル
     let found = false
     for(var entry of lines){
 	var line = entry.text
 	if(line.match(/^\?\s/)){ // ? ではじまるHelpfeel記法
 	    desc = line.replace(/^\?\s+/,'')
-	    status.text(decodeURIComponent(`${title} - ${desc}`))
+	    statusWindow.text(decodeURIComponent(`${title} - ${desc}`))
 	    descs.push(line)
 	    found = true
 	}
@@ -107,7 +115,6 @@ function process(lines,project,ask){
 		}
 		descs = []
 	    }
-
 	}
 	else {
 	    terminate_def(`https://scrapbox.io/${project}/${title}`)
@@ -116,7 +123,7 @@ function process(lines,project,ask){
     terminate_def(`https://scrapbox.io/${project}/${title}`)
 
     if(!found && ask){
-	register_page()
+	registerOnePage()
     }
 }
 
@@ -128,8 +135,8 @@ chrome.runtime.onMessage.addListener(message => {
 	return;
     }
 
-    status.text('')
-    status.show()
+    statusWindow.text('')
+    statusWindow.show()
 
     chrome.storage.local.get(suggestnames, function (value) {
 	for(var i=0;i<100;i++){
@@ -182,25 +189,25 @@ chrome.runtime.onMessage.addListener(message => {
 		    if(line.match(/^\?\s/)){ // ? ではじまるHelpfeel記法
 			desc = line.replace(/^\?\s+/,'')
 			descs.push(line)
-			status.text(decodeURIComponent(`${desc}`))
+			statusWindow.text(decodeURIComponent(`${desc}`))
 		    }
 		}
 		if(descs.length > 0){
 		    terminate_def(`https://gyazo.com/${gyazoid}`)
 		}
 		else {
-		    register_page()
+		    registerOnePage()
 		}
 	    }
 	    else {
-		register_page()
+		registerOnePage()
 	    }
 		
 	}
 	else {
-	    register_page()
+	    registerOnePage()
 	}
 
-	setTimeout(function(){ status.hide() }, 10000)
+	setTimeout(function(){ statusWindow.hide() }, 10000)
     })
 })
