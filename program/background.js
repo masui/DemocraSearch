@@ -21,7 +21,7 @@ for(var i=0;i<100;i++){
 // browserActionボタンを押したときcontent_script.jsにメッセージを送る
 //
 //chrome.browserAction.onClicked.addListener(function(tab) { // これはV2のやりかた
-chrome.action.onClicked.addListener(function(tab) {
+chrome.action.onClicked.addListener(function(tab) { // これがV3
     chrome.tabs.sendMessage(tab.id, { type: 'CLICK_POPUP', message: "message" })
 })
 
