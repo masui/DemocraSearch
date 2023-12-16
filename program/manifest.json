@@ -23,17 +23,17 @@
     "omnibox": { "keyword" : "/" },
     "action": {
 	"default_icon": {
-	    "16": "ds-16.png"
+	    "16": "icons/ds-16.png"
 	},
 	"default_title": "DemocraSearch登録"
     },
     "icons": {
-	"16": "ds-16.png",
-	"32": "ds-32.png",
-	"48": "ds-48.png",
-	"96": "ds-96.png",
-	"128": "ds-128.png",
-	"192": "ds-192.png"
+	"16": "icons/ds-16.png",
+	"32": "icons/ds-32.png",
+	"48": "icons/ds-48.png",
+	"96": "icons/ds-96.png",
+	"128": "icons/ds-128.png",
+	"192": "icons/ds-192.png"
     },
     "options_page": "setting.html"
 }

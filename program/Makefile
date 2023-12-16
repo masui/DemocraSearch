@@ -15,12 +15,12 @@ ZIPFILES=\
 	setting_browserify.js \
 	setting.html \
 	jquery-2.1.4.min.js \
-	ds-16.png \
-	ds-32.png \
-	ds-48.png \
-	ds-96.png \
-	ds-128.png \
-	ds-192.png
+	icons/ds-16.png \
+	icons/ds-32.png \
+	icons/ds-48.png \
+	icons/ds-96.png \
+	icons/ds-128.png \
+	icons/ds-192.png
 
 zip: js
 	/bin/rm -f ds.zip
