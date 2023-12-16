@@ -57,22 +57,18 @@ chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
 chrome.omnibox.onInputEntered.addListener(function(text) {
     if(text.match(/^http/)){
 	//openWindow(text) // V2では動いていたのだが
-	//location.href = text; // 動かない
-	//chrome.tabs.sendMessage(0, { type: 'OPEN', message: "message" })
-	//clients.openWindow(text);
-	//chrome.runtime.sendMessage({ type: 'open' })
-	//postMessage(text);
-	chrome.windows.create({ "url": text })
+	//chrome.windows.create({ "url": text }) // 新しいウィンドウを開く
+	chrome.tabs.create({ "url": text })
     }
     else {
 	fetch('https://goquick.org') // GoQuick.orgユーザはGoQuick.orgを利用
 	    .then(response => response.text())
 	    .then(data => {
 		if(data.match("GoQuick Login")){
-		    chrome.windows.create({"url": `https://google.com/search?q=${text}`})
+		    chrome.tabs.create({"url": `https://google.com/search?q=${text}`})
 		}
 		else {
-		    chrome.windows.create({"url": 'http://goquick.org/' + text})
+		    chrome.tabs.create({"url": 'http://goquick.org/' + text})
 		}
 	    })
     }
