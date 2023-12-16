@@ -56,8 +56,8 @@ chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
 //
 chrome.omnibox.onInputEntered.addListener(function(text) {
     if(text.match(/^http/)){
-	//openWindow(text) // location.href = は動かない
-	//location.href = text;
+	//openWindow(text) // V2では動いていたのだが
+	//location.href = text; // 動かない
 	//chrome.tabs.sendMessage(0, { type: 'OPEN', message: "message" })
 	//clients.openWindow(text);
 	//chrome.runtime.sendMessage({ type: 'open' })
